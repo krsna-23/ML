@@ -1,0 +1,2513 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "5d0191d5-1017-493a-bc86-2a917cb8ac18",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "from datetime import datetime,date,time\n",
+    "import warnings\n",
+    "warnings.filterwarnings('ignore')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "1c95c894-5a6e-47f7-87aa-35b7582717a8",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df=pd.read_csv(\"C:\\\\Users\\\\kmm23\\\\OneDrive\\\\Documents\\\\corona.csv\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "3f0f5568-fc34-4440-8e55-afbb7eb039da",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Ind_ID</th>\n",
+       "      <th>Test_date</th>\n",
+       "      <th>Cough_symptoms</th>\n",
+       "      <th>Fever</th>\n",
+       "      <th>Sore_throat</th>\n",
+       "      <th>Shortness_of_breath</th>\n",
+       "      <th>Headache</th>\n",
+       "      <th>Corona</th>\n",
+       "      <th>Age_60_above</th>\n",
+       "      <th>Sex</th>\n",
+       "      <th>Known_contact</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1</td>\n",
+       "      <td>11-03-2020</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2</td>\n",
+       "      <td>11-03-2020</td>\n",
+       "      <td>False</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>positive</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>3</td>\n",
+       "      <td>11-03-2020</td>\n",
+       "      <td>False</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>positive</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>4</td>\n",
+       "      <td>11-03-2020</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>5</td>\n",
+       "      <td>11-03-2020</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Contact with confirmed</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Ind_ID   Test_date Cough_symptoms  Fever Sore_throat Shortness_of_breath  \\\n",
+       "0       1  11-03-2020           True  False        True               False   \n",
+       "1       2  11-03-2020          False   True       False               False   \n",
+       "2       3  11-03-2020          False   True       False               False   \n",
+       "3       4  11-03-2020           True  False       False               False   \n",
+       "4       5  11-03-2020           True  False       False               False   \n",
+       "\n",
+       "  Headache    Corona Age_60_above  Sex           Known_contact  \n",
+       "0    False  negative          NaN  NaN                  Abroad  \n",
+       "1    False  positive          NaN  NaN                  Abroad  \n",
+       "2    False  positive          NaN  NaN                  Abroad  \n",
+       "3    False  negative          NaN  NaN                  Abroad  \n",
+       "4    False  negative          NaN  NaN  Contact with confirmed  "
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "580b939d-8122-43f8-94d9-f2756fb35a53",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(278848, 11)"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "3c4ddc4f-2099-41ab-9444-882b377b24cd",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Ind_ID                      0\n",
+       "Test_date                   0\n",
+       "Cough_symptoms            252\n",
+       "Fever                     252\n",
+       "Sore_throat                 1\n",
+       "Shortness_of_breath         1\n",
+       "Headache                    1\n",
+       "Corona                      0\n",
+       "Age_60_above           127320\n",
+       "Sex                     19563\n",
+       "Known_contact               0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.isna().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "a5c40b18-67bd-429e-9a64-1339532497fe",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.duplicated().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "f22ac516-6310-4051-9c87-95956e0074b6",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 278848 entries, 0 to 278847\n",
+      "Data columns (total 11 columns):\n",
+      " #   Column               Non-Null Count   Dtype \n",
+      "---  ------               --------------   ----- \n",
+      " 0   Ind_ID               278848 non-null  int64 \n",
+      " 1   Test_date            278848 non-null  object\n",
+      " 2   Cough_symptoms       278596 non-null  object\n",
+      " 3   Fever                278596 non-null  object\n",
+      " 4   Sore_throat          278847 non-null  object\n",
+      " 5   Shortness_of_breath  278847 non-null  object\n",
+      " 6   Headache             278847 non-null  object\n",
+      " 7   Corona               278848 non-null  object\n",
+      " 8   Age_60_above         151528 non-null  object\n",
+      " 9   Sex                  259285 non-null  object\n",
+      " 10  Known_contact        278848 non-null  object\n",
+      "dtypes: int64(1), object(10)\n",
+      "memory usage: 23.4+ MB\n"
+     ]
+    }
+   ],
+   "source": [
+    "df.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "ba34b3aa-99d3-4799-b8ee-4b76e1b8185e",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df.drop(columns=\"Ind_ID\",inplace=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "2b1ff402-e820-4345-b963-58a3a727247c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"Test_date\"] = pd.to_datetime(df[\"Test_date\"], format = \"%d-%m-%Y\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "8c67e1e2-b1d4-4d7e-b6cf-b2745e06c8fb",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 278848 entries, 0 to 278847\n",
+      "Data columns (total 10 columns):\n",
+      " #   Column               Non-Null Count   Dtype         \n",
+      "---  ------               --------------   -----         \n",
+      " 0   Test_date            278848 non-null  datetime64[ns]\n",
+      " 1   Cough_symptoms       278596 non-null  object        \n",
+      " 2   Fever                278596 non-null  object        \n",
+      " 3   Sore_throat          278847 non-null  object        \n",
+      " 4   Shortness_of_breath  278847 non-null  object        \n",
+      " 5   Headache             278847 non-null  object        \n",
+      " 6   Corona               278848 non-null  object        \n",
+      " 7   Age_60_above         151528 non-null  object        \n",
+      " 8   Sex                  259285 non-null  object        \n",
+      " 9   Known_contact        278848 non-null  object        \n",
+      "dtypes: datetime64[ns](1), object(9)\n",
+      "memory usage: 21.3+ MB\n"
+     ]
+    }
+   ],
+   "source": [
+    "df.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "6b39b5d4-94c4-421a-a663-984ccf5a8f97",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Cough_symptoms</th>\n",
+       "      <th>Fever</th>\n",
+       "      <th>Sore_throat</th>\n",
+       "      <th>Shortness_of_breath</th>\n",
+       "      <th>Headache</th>\n",
+       "      <th>Corona</th>\n",
+       "      <th>Age_60_above</th>\n",
+       "      <th>Sex</th>\n",
+       "      <th>Known_contact</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>count</th>\n",
+       "      <td>278596</td>\n",
+       "      <td>278596</td>\n",
+       "      <td>278847</td>\n",
+       "      <td>278847</td>\n",
+       "      <td>278847</td>\n",
+       "      <td>278848</td>\n",
+       "      <td>151528</td>\n",
+       "      <td>259285</td>\n",
+       "      <td>278848</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>unique</th>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>3</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>top</th>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>No</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Other</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>freq</th>\n",
+       "      <td>236368</td>\n",
+       "      <td>256844</td>\n",
+       "      <td>276921</td>\n",
+       "      <td>277270</td>\n",
+       "      <td>276433</td>\n",
+       "      <td>260227</td>\n",
+       "      <td>125703</td>\n",
+       "      <td>130158</td>\n",
+       "      <td>242741</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "       Cough_symptoms   Fever Sore_throat Shortness_of_breath Headache  \\\n",
+       "count          278596  278596      278847              278847   278847   \n",
+       "unique              2       2           2                   2        2   \n",
+       "top             False   False       False               False    False   \n",
+       "freq           236368  256844      276921              277270   276433   \n",
+       "\n",
+       "          Corona Age_60_above     Sex Known_contact  \n",
+       "count     278848       151528  259285        278848  \n",
+       "unique         3            2       2             3  \n",
+       "top     negative           No  female         Other  \n",
+       "freq      260227       125703  130158        242741  "
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.describe(include=\"object\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "b9ee5098-96eb-4b49-9d13-26ec6d67ee5c",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Index(['Test_date', 'Cough_symptoms', 'Fever', 'Sore_throat',\n",
+       "       'Shortness_of_breath', 'Headache', 'Corona', 'Age_60_above', 'Sex',\n",
+       "       'Known_contact'],\n",
+       "      dtype='object')"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.columns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "2fe8410c-652b-47b0-9abc-91d927b22bdd",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Test_date</th>\n",
+       "      <th>Cough_symptoms</th>\n",
+       "      <th>Fever</th>\n",
+       "      <th>Sore_throat</th>\n",
+       "      <th>Shortness_of_breath</th>\n",
+       "      <th>Headache</th>\n",
+       "      <th>Corona</th>\n",
+       "      <th>Age_60_above</th>\n",
+       "      <th>Sex</th>\n",
+       "      <th>Known_contact</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2020-03-11</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2020-03-11</td>\n",
+       "      <td>False</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>positive</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2020-03-11</td>\n",
+       "      <td>False</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>positive</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>2020-03-11</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>2020-03-11</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Contact with confirmed</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Test_date Cough_symptoms  Fever Sore_throat Shortness_of_breath Headache  \\\n",
+       "0 2020-03-11           True  False        True               False    False   \n",
+       "1 2020-03-11          False   True       False               False    False   \n",
+       "2 2020-03-11          False   True       False               False    False   \n",
+       "3 2020-03-11           True  False       False               False    False   \n",
+       "4 2020-03-11           True  False       False               False    False   \n",
+       "\n",
+       "     Corona Age_60_above  Sex           Known_contact  \n",
+       "0  negative          NaN  NaN                  Abroad  \n",
+       "1  positive          NaN  NaN                  Abroad  \n",
+       "2  positive          NaN  NaN                  Abroad  \n",
+       "3  negative          NaN  NaN                  Abroad  \n",
+       "4  negative          NaN  NaN  Contact with confirmed  "
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "0cac73af-e747-4bea-b3a2-4407710e8724",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Test_date                   0\n",
+       "Cough_symptoms            252\n",
+       "Fever                     252\n",
+       "Sore_throat                 1\n",
+       "Shortness_of_breath         1\n",
+       "Headache                    1\n",
+       "Corona                      0\n",
+       "Age_60_above           127320\n",
+       "Sex                     19563\n",
+       "Known_contact               0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.isna().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "fdcdefbb-f0a0-483d-80fe-2061ad9182a6",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([True, False, nan], dtype=object)"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.Cough_symptoms.unique()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "ddaea4ed-084f-4d19-8e5e-c8cb17717b69",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<Axes: xlabel='Cough_symptoms'>"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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",
+      "text/plain": [
+       "<Figure size 640x480 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "((df.Cough_symptoms.value_counts()/df.shape[0])*100).plot(kind=\"bar\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "7b2dd01b-558e-437b-8a84-2f73b1e91bf3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"Cough_symptoms\"]=df[\"Cough_symptoms\"].fillna(df.Cough_symptoms.mode()[0])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "6c13a722-1593-4ecd-b381-e7d1ca47414e",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.Cough_symptoms.isnull().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "46178334-1adb-45ee-ba51-690da12e33ad",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([False, True, nan], dtype=object)"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.Fever.unique()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "76876796-7e62-4023-9456-fbb5754e3a00",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<Axes: xlabel='Fever'>"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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88gjj2T16tUZM2ZMtUcE3oAXXnghBw8efNUdTnDOB1UxYcKE/PSnP82uXbty5plnZuXKlWloaMgjjzwiPOBN4JRTThEe/J/sfADQJ1paWn7nOVsbN24sOA3HMud8UBXr1q3L8ccfn/e+971JknvvvTfLli3LyJEjs2DBgpxwwglVnhDorTlz5vS4/tJLL+Xxxx/PD37wg1xzzTXVGYpjkp0PqmLcuHG59tpr8/GPfzwbN27MyJEjM23atKxduzYXXXSRv4YIbyL/8A//kEcffTTLli2r9igcI8QHVVFfX59169blzDPPzE033ZSHHnooDz74YH76059m+vTp2bJlS7VHBPrIxo0b84EPfCBdXV3VHoVjhBNOqYpKpZKDBw8mSf71X/81F154YZKkubk5L7zwQjVHA/rYd7/73bzjHe+o9hgcQ5zzQVWMHTs2X/3qV3Peeedl9erVWbp0aZKX/zxzQ0NDlacDjsTo0aN7nHBaqVTS2dmZX//617nllluqOBnHGvFBVXR0dGTmzJm55557Mn/+/Jx11llJXv4JacKECVWeDjgSH/vYx3pcHzBgQE499dRMnjw57373u6szFMck53xwTNmzZ08GDhyY448/vtqjAL2wf//+fPvb387555+fxsbGao/DMU58ANAnhgwZkl/84hcZPnx4tUfhGOdtF4p5+9vf/ro/NO7FF188ytMAfW38+PF5/PHHxQevSXxQjL/dAW9us2fPzl/+5V/mP//zPzNmzJiceOKJPW5/3/veV6XJONZ42wWAN+Qzn/lMOjo6ctJJJx12W01NTSqVSmpqanLgwIHyw3FMEh9U3e7du/PSSy/1WBs6dGiVpgF6a+DAgfnVr36V3bt3/87jvB3DId52oSp27tyZL33pS7nrrrvym9/85rDb/YQE/cehn2HFBa+Xv3BKVcydOzcPPfRQbrnlltTW1uab3/xmFi5cmKamptx+++3VHg/opdd7Mjkk3nahSt71rnfl9ttvz+TJkzN06NCsW7cuZ511Vr71rW/lO9/5Tr7//e9Xe0TgdRowYEDq6+tfM0D8FhuHeNuFqnjxxRfT0tKS5OXzOw79ozRx4sT8+Z//eTVHA47AwoULU19fX+0x6CfEB1UxYsSIPPvssxk+fHhGjhyZu+66K7/3e7+X++6771XPmAeObdOnT8+wYcOqPQb9hHM+KGrjxo05ePBgPv3pT+fJJ59MksybN6/73I+rrroq11xzTZWnBHrD+R70lnM+KOrQr+Qd+gnpk5/8ZL7+9a9n7969efTRR3PmmWfm/e9/f5WnBHpjwIAB6ezstPPB6yY+KOp//yNVV1eXJ598MiNGjKjyZACU4m0XAKAo8UFRNTU1h70/7P1igLcWv+1CUZVKJZdffnlqa2uTJHv27MkVV1xx2AdQ3X333dUYD4ACxAdFXXbZZT2uX3LJJVWaBIBqccIpAFCUcz4AgKLEBwBQlPgAAIoSHwBAUeIDAChKfACv2+WXX979h+JeefmP//iPao8G9CP+zgfQKx/5yEeybNmyHmunnnpq8TkqlUoOHDiQ447zzxj0N3Y+gF6pra1NY2Njj8vAgQNz3333ZcyYMRk0aFBGjBiRhQsXZv/+/UmST33qU5k+fXqPx3nppZdyyimndIdMpVLJokWLMmLEiAwePDjvf//7893vfrf7+Icffjg1NTV58MEHM3bs2NTW1ubHP/5xuRcO9Bk/MgBv2IMPPphLLrkkX//61/OhD30ov/zlL/Nnf/ZnSZKvfOUrmTlzZj7xiU/kt7/9bd72trd132fnzp35+Mc/niT58pe/nLvvvjtLly5Na2trfvSjH+WSSy7JqaeemkmTJnU/19y5c/O1r30tI0aMyEknnVT8tQJvnL9wCrxul19+ee64444MGjSoe+2CCy7If//3f+eCCy7IvHnzutfvuOOOzJ07N88//3xeeumlNDU1ZfHixbn00kuTJDNmzMj+/ftz1113ZefOnTnllFPy0EMP5Zxzzul+jM997nPZtWtXVqxYkYcffjgf/vCHc8899+SjH/1ouRcN9Dk7H0CvfPjDH87SpUu7r5944ok566yzsnbt2txwww3d6wcOHMiePXuya9euDBkyJBdffHG+/e1v59JLL83OnTtz7733ZsWKFUmSp59+Onv27MmUKVN6PNe+ffsyevToHmtjx449iq8OKEF8AL1yKDZe6eDBg1m4cGGmTZt22PGHdklmzpyZSZMmZevWrVm1alUGDRqUCy64oPv+SXL//ffn9NNP73H/Q5+A/MrnB/o38QG8YR/84AezYcOGw6LklSZMmJDm5ubceeedeeCBB3LxxRfnhBNOSJKMHDkytbW12bx5c4/zO4A3J/EBvGHXXXdd/uiP/ijNzc25+OKLM2DAgPz85z/PU089la9+9atJkpqamsyYMSPf+MY38swzz+SHP/xh9/3r6uryV3/1V7nqqqty8ODBTJw4MV1dXVmzZk3e9ra35bLLLqvWSwOOAr9qC7xh559/fv7lX/4lq1atyrhx4/L7v//7Wbx4cYYPH97juJkzZ+bpp5/O6aefnnPPPbfHbX/zN3+T6667Lu3t7Tn77LNz/vnn57777ktLS0vJlwIU4LddAICi7HwAAEWJDwCgKPEBABQlPgCAosQHAFCU+AAAihIfAEBR4gMAKEp8AABFiQ8AoCjxAQAU9f8AhavCwb8o34sAAAAASUVORK5CYII=",
+      "text/plain": [
+       "<Figure size 640x480 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "((df.Fever.value_counts()/df.shape[0])*100).plot(kind=\"bar\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "20ae9199-e63d-4839-b025-2f87f08aab90",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"Fever\"]=df[\"Fever\"].fillna(df.Fever.mode()[0])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "dacd5b9f-4489-4d20-807f-93ad9af05378",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0"
+      ]
+     },
+     "execution_count": 23,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.Fever.isna().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "e4af8232-edd7-4796-a7ad-4829a5bd009e",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([nan, 'No', 'Yes'], dtype=object)"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.Age_60_above.unique()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "ab4b1eb8-9a50-433c-9dcc-bbff94a938e7",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<Axes: xlabel='Age_60_above'>"
+      ]
+     },
+     "execution_count": 27,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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bq78/f01fPhwrzz+559/rtGjRys0NFTBwcG69tprdejQIffxyspKPfTQQ2rVqpWaNWum0aNH6+uvv/bKrAAaH+ID8EEvv/yyHnroIW3ZssXjh74N//nPf3TdddepS5cu+vDDD7V79249+eSTatq0qXvP1KlTtXr1aq1YsUJbtmzR8ePHNWrUKNXU1FidFUDjRHwAPubEiRNauXKlHnzwQY0aNUqvvPKKx/E333xTUVFRCgwM1PXXX6/MzEw5HA59//337j25ubkaNGiQAgMDFRERoYcfflgnTpw4p8dPTEzUiBEjlJaWpl69eqljx44aOXKkWrduLUkqKyvTSy+9pHnz5mno0KHq1auXXn31VX366ad69913z+kxZsyYoc6dOysoKEgdO3bUk08+qR9++KHOvhdffFEREREKCgrS7bff7vEca2trNXv2bLVt21ZOp1M9e/bU+vXr3cf79++vmTNnetzff//7XwUEBOiDDz6QJFVVVWn69Om64oor1KxZM/Xr108ffvjhOT0HAD+P+AB8THZ2tq688kpdeeWVuuuuu7R06VKd/kPFX331lW677TbdfPPN2rVrlyZMmKDExESP23/66acaNmyY4uPjtWfPHmVnZ2vLli2aMmXKWR+7trZWa9euVefOnTVs2DC1bt1a/fr105o1a9x78vLy9MMPPyguLs69Fh4erm7duik3N/ecnmNwcLBeeeUV7du3T88995yWLFmi+fPne+w5ePCgVq5cqbfeekvr16/Xrl27NHnyZPfx5557TvPmzdOzzz6rPXv2aNiwYRo9erQOHDggSRo/frxee+01/fiPPGdnZyssLEyDBw+WJP35z3/W1q1btWLFCu3Zs0e33367hg8f7r4PAOfJAPApMTExJiMjwxhjzA8//GBatWplcnJyjDHGzJgxw3Tr1s1jf2JiopFkSktLjTHG3H333eaBBx7w2LN582bj5+dnKioqfvGxjxw5YiSZoKAgk56ebnbu3GlSU1ONw+EwH374oTHGmOXLl5tLLrmkzm1jY2PrPO65SktLM71793ZfnzVrlvH39zdFRUXutXXr1hk/Pz9z5MgRY4wx4eHhZs6cOR7307dvXzNp0iRjjDElJSWmSZMmZtOmTe7j/fv3N48//rgxxpiDBw8ah8NhvvnmG4/7uPHGG01CQsJ5PQ8Ap/DBcoAPyc/P17Zt27Rq1SpJUpMmTTR27Fi9/PLLGjp0qPLz89W3b1+P21xzzTUe1/Py8nTw4EEtX77cvWaMUW1trQoKCtS1a9efffza2lpJ0pgxYzRt2jRJUs+ePZWbm6sXXnjBfcbgTIwxcjgc5/Q8X3/9dWVkZOjgwYM6fvy4qqurFRIS4rGnXbt2Hh9k1r9/f9XW1io/P19BQUE6fPiwBgwY4HGbAQMGaPfu3ZKkyy+/XLGxsVq+fLkGDhyogoICffTRR1q0aJEkaceOHTLGqHPnzh73UVlZqZYtW57T8wBwZsQH4ENeeuklVVdX64orrnCvGWMUEBCg0tLSM/6ANz/57Mja2lpNmDBBDz/8cJ37b9eu3S8+fqtWrdSkSRNdddVVHutdu3bVli1bJEkul0tVVVUqLS3VpZde6t5TUlKimJiYsz7Hjz/+WHfeeaeSk5M1bNgwhYaGasWKFZo3b94v3u708/7x8z/T1+LHa+PHj9cjjzyiBQsWKCsrS1dffbWio6Mlnfo6+fv7Ky8vT/7+/h7307x587M+DwA/j/gAfER1dbWWLVumefPmebyfQpJuvfVWLV++XF26dNHbb7/tceyTTz7xuP773/9ee/fuVadOneo9wyWXXKK+ffsqPz/fY33//v1q3769JKl3794KCAhQTk6O7rjjDknSkSNH9NlnnyktLe2sj7F161a1b9/e470qhYWFdfYdOnRIhw8fVnh4uCTpo48+kp+fnzp37qyQkBCFh4dry5YtGjRokPs2ubm5HmeCbr75Zk2YMEHr169XVlaW7r77bvexXr16qaamRiUlJRo4cOC5fHkAnCsvvuQDoB5Wr15tLrnkEvP999/XOfa3v/3N9OzZ03z55ZcmICDATJ8+3eTn55vs7GzTtm1bI8l9u927d5vAwEAzadIks3PnTrN//37zxhtvmClTppzTHKtWrTIBAQFm8eLF5sCBA2bBggXG39/fbN682b1n4sSJpm3btubdd981O3bsMDfccIOJjo421dXVZ73/NWvWmCZNmpjXXnvNHDx40Dz33HPmsssuM6Ghoe49s2bNMs2aNTNDhw41u3btMps2bTKdO3c2d955p3vP/PnzTUhIiFmxYoX54osvzIwZM0xAQIDZv3+/x+ONGzfOREdHG4fDYQoLCz2OjR8/3nTo0MH861//Ml9++aXZtm2befrpp83atWvP6WsF4MyID8BHjBo1yowYMeKMx/Ly8owkk5eXZ9544w3TqVMn43Q6zZAhQ8yiRYuMJI83k27bts3Exsaa5s2bm2bNmpkePXrUeXPmL3nppZdMp06dTNOmTU10dLRZs2aNx/GKigozZcoUc9lll5nAwEAzatQoc+jQoXO+/8cff9y0bNnSNG/e3IwdO9bMnz+/TnxER0eb559/3oSHh5umTZua+Ph4c/ToUfeempoak5ycbK644goTEBBgoqOjzbp16+o81tq1a40kM2jQoDrHqqqqzN///nfToUMHExAQYFwul7nlllvMnj17zvm5AKjLYcxPXhAGcFGZM2eOXnjhBRUVFXl7FACQxHs+gIvO888/r759+6ply5baunWrnnnmmXP6Gx4AYAt/ZAy4yBw4cEBjxozRVVddpaeeekqPPfaYkpKSzum2mzdvVvPmzX/20hBSUlJ+9v5vuummBnkMAI0bL7sAcKuoqNA333zzs8fP5zdkfuro0aM6evToGY8FBgZ6/BoxgIsT8QEAAKziZRcAAGAV8QEAAKwiPgAAgFXEBwAAsIr4AAAAVhEfAADAKuIDAABYRXwAAACr/g84KqFDndMbBAAAAABJRU5ErkJggg==",
+      "text/plain": [
+       "<Figure size 640x480 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "((df.Age_60_above.value_counts()/df.shape[0])*100).plot(kind=\"bar\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "5caa293b-9189-4667-bded-ec819fc223dd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"Age_60_above\"]=df[\"Age_60_above\"].fillna(df.Age_60_above.mode()[0])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "0a5ceef5-43ad-4eb7-85c6-184293ac0097",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.Age_60_above.isna().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "5e4b4916-bec5-47ea-b831-9126502e0493",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([nan, 'male', 'female'], dtype=object)"
+      ]
+     },
+     "execution_count": 27,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.Sex.unique()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "e86910fb-c0bb-4354-b9e8-163d85e3e9fe",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<Axes: xlabel='Sex'>"
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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fSsPPPBAjScDYKCJD4pbsWJFzj///NTX1+fRRx9NV1dXkqSzszOtra01ng6AgSY+KO6LX/xibr311tx+++09TkSbPHlyHn300RpOBkAJ4oPiNm/enClTpvRaHzZsWJ5//vnyAwFQlPiguJEjR2bLli291h944IGMGTOmBhMBUJL4oLhZs2bluuuuy8MPP5xKpZIdO3bk29/+dubPn5/Zs2fXejwABpiv2lLEk08+mfHjx3dfYGzRokX5yle+kn379iVJ6urqMn/+/HzhC1+o5ZgAFCA+KOLoo4/OM888kxEjRmTMmDFZv359jjvuuPz3f/93Dh48mHHjxmXo0KG1HhOAAlzhlCKOP/74bN26NSNGjMjPf/7zHDx4MG9961szceLEWo8GQGHigyI+8pGPZOrUqRk5cmQqlUomTpyYo48++jX3feqppwpPB0BJ4oMibrvttsycOTNbtmzJnDlz8olPfCINDQ21HguAGnDOB8V97GMfy8033yw+AN6kxAcAUJTrfAAARYkPAKAo8QEAFCU+AICixAcAUJT4APpFR0dHZs2alXe84x2pq6tLU1NTzj///Dz44IO1Hg04zLjIGNAvPvKRj+Tll1/OnXfemTFjxuSXv/xl/vM//zO7du2q9WjAYcaRD+CQPf/883nggQdy00035dxzz80pp5ySs846KwsXLsyFF16YJNm9e3c++clPZsSIERk2bFje//7354knnkiSPPvss2lqakpra2v3Yz788MM59thjs3r16pq8JmDgiA/gkA0dOjRDhw7N3Xffna6url7bq9VqLrzwwrS3t2flypV55JFHcsYZZ+QDH/hAdu3alZNOOil///d/n5aWlmzYsCEvvPBCLr/88syePTszZsyowSsCBpIrnAL9YsWKFfnEJz6RvXv35owzzsjUqVPzJ3/yJ5kwYUJ+9KMf5cMf/nA6OjpSV1fX/TennnpqFixYkE9+8pNJkmuvvTY//OEP8573vCdPPPFE1q9fn+OOO65WLwkYIOID6Df79u3L/fffnwcffDCrVq3KT37yk9xxxx159tlnc8MNN6S+vr7H/nv37s38+fNz0003dd8fP358tm/fng0bNmTChAm1eBnAABMfwIC5+uqrs2bNmsyePTtf/epXc++99/ba5/jjj8+JJ56YJNm0aVMmTpyYl19+OT/4wQ9y0UUXFZ4YKMG3XYABM27cuNx9990544wz0t7enmOOOSbvfOc7X3Pf/fv357LLLssll1ySd7/73bnqqquycePGNDY2lh0aGHCOfACHbOfOnbn44ovz8Y9/PBMmTEhDQ0M2bNiQz3zmM7nwwgtzxx13ZMqUKens7MxNN92Ud73rXdmxY0dWrlyZD33oQ5k4cWL+/M//PN/73vfyxBNPZOjQoTn33HPT0NCQf/u3f6v1ywP6mfgADllXV1daWlqyevXq/OxnP8vLL7+c5ubmXHzxxfnsZz+b+vr6dHZ2ZtGiRVmxYkX3V2unTJmStra2/OxnP8v06dNzzz335JxzzkmSbNu2LRMmTEhbW1s+9alP1fgVAv1JfAAARbnOBwBQlPgAAIoSHwBAUeIDAChKfAAARYkPAKAo8QEAFCU+AICixAcAUJT4AACKEh8AQFH/F0IBFn6BsNy/AAAAAElFTkSuQmCC",
+      "text/plain": [
+       "<Figure size 640x480 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "((df.Sex.value_counts()/df.shape[0])*100).plot(kind=\"bar\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ba137e68-e278-4017-8422-beeb685daaf1",
+   "metadata": {},
+   "source": [
+    "df.Sex.isna().sum()\n",
+    "# we can't replace the null values with mode in this column bcoz both classes are in same proportion so we drop the null values."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "41b9fbcd-e71c-4c4c-9199-d3a71b4be5c7",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df=df.dropna()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "id": "604c0d21-52d1-49af-b875-00e7042368aa",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Test_date              0\n",
+       "Cough_symptoms         0\n",
+       "Fever                  0\n",
+       "Sore_throat            0\n",
+       "Shortness_of_breath    0\n",
+       "Headache               0\n",
+       "Corona                 0\n",
+       "Age_60_above           0\n",
+       "Sex                    0\n",
+       "Known_contact          0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 30,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.isna().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "id": "1ff67ad1-35e2-4883-ac04-4836fad12759",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Index(['Test_date', 'Cough_symptoms', 'Fever', 'Sore_throat',\n",
+       "       'Shortness_of_breath', 'Headache', 'Corona', 'Age_60_above', 'Sex',\n",
+       "       'Known_contact'],\n",
+       "      dtype='object')"
+      ]
+     },
+     "execution_count": 31,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.columns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "id": "862dda7d-11d4-45a1-afc7-346bffb87e3f",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "Index: 259285 entries, 13727 to 278847\n",
+      "Data columns (total 10 columns):\n",
+      " #   Column               Non-Null Count   Dtype         \n",
+      "---  ------               --------------   -----         \n",
+      " 0   Test_date            259285 non-null  datetime64[ns]\n",
+      " 1   Cough_symptoms       259285 non-null  bool          \n",
+      " 2   Fever                259285 non-null  bool          \n",
+      " 3   Sore_throat          259285 non-null  object        \n",
+      " 4   Shortness_of_breath  259285 non-null  object        \n",
+      " 5   Headache             259285 non-null  object        \n",
+      " 6   Corona               259285 non-null  object        \n",
+      " 7   Age_60_above         259285 non-null  object        \n",
+      " 8   Sex                  259285 non-null  object        \n",
+      " 9   Known_contact        259285 non-null  object        \n",
+      "dtypes: bool(2), datetime64[ns](1), object(7)\n",
+      "memory usage: 18.3+ MB\n"
+     ]
+    }
+   ],
+   "source": [
+    "df.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "id": "5a33fef5-bbf4-4ecf-86eb-132b60b89abe",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df[\"Test_date\"]=df[\"Test_date\"].astype(\"int64\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "id": "bb5070b5-3b9c-4768-b730-df9df03e8123",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "Index: 259285 entries, 13727 to 278847\n",
+      "Data columns (total 10 columns):\n",
+      " #   Column               Non-Null Count   Dtype \n",
+      "---  ------               --------------   ----- \n",
+      " 0   Test_date            259285 non-null  int64 \n",
+      " 1   Cough_symptoms       259285 non-null  bool  \n",
+      " 2   Fever                259285 non-null  bool  \n",
+      " 3   Sore_throat          259285 non-null  object\n",
+      " 4   Shortness_of_breath  259285 non-null  object\n",
+      " 5   Headache             259285 non-null  object\n",
+      " 6   Corona               259285 non-null  object\n",
+      " 7   Age_60_above         259285 non-null  object\n",
+      " 8   Sex                  259285 non-null  object\n",
+      " 9   Known_contact        259285 non-null  object\n",
+      "dtypes: bool(2), int64(1), object(7)\n",
+      "memory usage: 18.3+ MB\n"
+     ]
+    }
+   ],
+   "source": [
+    "df.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "id": "c08e1f24-1ff6-487f-8943-d6052fa03e47",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Test_date</th>\n",
+       "      <th>Cough_symptoms</th>\n",
+       "      <th>Fever</th>\n",
+       "      <th>Sore_throat</th>\n",
+       "      <th>Shortness_of_breath</th>\n",
+       "      <th>Headache</th>\n",
+       "      <th>Corona</th>\n",
+       "      <th>Age_60_above</th>\n",
+       "      <th>Sex</th>\n",
+       "      <th>Known_contact</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>13727</th>\n",
+       "      <td>1584835200000000000</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>No</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13728</th>\n",
+       "      <td>1584835200000000000</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>No</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13730</th>\n",
+       "      <td>1584835200000000000</td>\n",
+       "      <td>True</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>positive</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Other</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                 Test_date  Cough_symptoms  Fever Sore_throat  \\\n",
+       "13727  1584835200000000000            True  False       False   \n",
+       "13728  1584835200000000000            True  False       False   \n",
+       "13730  1584835200000000000            True   True       False   \n",
+       "\n",
+       "      Shortness_of_breath Headache    Corona Age_60_above     Sex  \\\n",
+       "13727               False    False  negative           No    male   \n",
+       "13728               False    False  negative           No  female   \n",
+       "13730               False    False  positive          Yes  female   \n",
+       "\n",
+       "      Known_contact  \n",
+       "13727        Abroad  \n",
+       "13728        Abroad  \n",
+       "13730         Other  "
+      ]
+     },
+     "execution_count": 35,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.head(3)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "id": "b5a3b99e-bb10-4513-a3c4-55894fb16cbf",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array(['negative', 'positive', 'other'], dtype=object)"
+      ]
+     },
+     "execution_count": 36,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.Corona.unique()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "id": "e435c825-7000-42bc-b623-31a83a8fe662",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Corona\n",
+       "negative    242351\n",
+       "positive     13560\n",
+       "other         3374\n",
+       "Name: count, dtype: int64"
+      ]
+     },
+     "execution_count": 37,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.Corona.value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "id": "56ad564a-ddd2-4ad9-8b2b-43a97f76f9dc",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#df[\"Corona\"]=np.where(df[\"Corona\"]==\"other\",1,df.drop)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "id": "946c2627-95ad-485a-b4e0-d8b3a6fb43f2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.preprocessing import LabelEncoder"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "id": "6594bac7-7a15-4a05-9cb1-d236fb89d0a7",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "le=LabelEncoder()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "id": "8cd0da86-0151-4bf6-92de-3db851237d51",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Sore_throat</th>\n",
+       "      <th>Shortness_of_breath</th>\n",
+       "      <th>Headache</th>\n",
+       "      <th>Corona</th>\n",
+       "      <th>Age_60_above</th>\n",
+       "      <th>Sex</th>\n",
+       "      <th>Known_contact</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>13727</th>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>No</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13728</th>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>No</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Abroad</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13730</th>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>positive</td>\n",
+       "      <td>Yes</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Other</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13731</th>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>other</td>\n",
+       "      <td>No</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Other</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13732</th>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>other</td>\n",
+       "      <td>No</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Other</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>278843</th>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>positive</td>\n",
+       "      <td>No</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Other</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>278844</th>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>No</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Other</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>278845</th>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>No</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Other</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>278846</th>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>No</td>\n",
+       "      <td>male</td>\n",
+       "      <td>Other</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>278847</th>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>negative</td>\n",
+       "      <td>No</td>\n",
+       "      <td>female</td>\n",
+       "      <td>Other</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>259285 rows × 7 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "       Sore_throat Shortness_of_breath Headache    Corona Age_60_above  \\\n",
+       "13727        False               False    False  negative           No   \n",
+       "13728        False               False    False  negative           No   \n",
+       "13730        False               False    False  positive          Yes   \n",
+       "13731        False               False    False     other           No   \n",
+       "13732        False               False    False     other           No   \n",
+       "...            ...                 ...      ...       ...          ...   \n",
+       "278843       False               False    False  positive           No   \n",
+       "278844       False               False    False  negative           No   \n",
+       "278845       False               False    False  negative           No   \n",
+       "278846       False               False    False  negative           No   \n",
+       "278847       False               False    False  negative           No   \n",
+       "\n",
+       "           Sex Known_contact  \n",
+       "13727     male        Abroad  \n",
+       "13728   female        Abroad  \n",
+       "13730   female         Other  \n",
+       "13731   female         Other  \n",
+       "13732   female         Other  \n",
+       "...        ...           ...  \n",
+       "278843    male         Other  \n",
+       "278844  female         Other  \n",
+       "278845    male         Other  \n",
+       "278846    male         Other  \n",
+       "278847  female         Other  \n",
+       "\n",
+       "[259285 rows x 7 columns]"
+      ]
+     },
+     "execution_count": 41,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.select_dtypes(include=\"object\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "id": "02343a85-25d4-4a60-8d0b-9b30f240bbe1",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "for i in df.select_dtypes(include=\"object\"):\n",
+    "    df[i]=le.fit_transform(df[i])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "id": "471d7428-43fa-40df-92b6-a150e261ca5a",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Test_date</th>\n",
+       "      <th>Cough_symptoms</th>\n",
+       "      <th>Fever</th>\n",
+       "      <th>Sore_throat</th>\n",
+       "      <th>Shortness_of_breath</th>\n",
+       "      <th>Headache</th>\n",
+       "      <th>Corona</th>\n",
+       "      <th>Age_60_above</th>\n",
+       "      <th>Sex</th>\n",
+       "      <th>Known_contact</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>13727</th>\n",
+       "      <td>1584835200000000000</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13728</th>\n",
+       "      <td>1584835200000000000</td>\n",
+       "      <td>True</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13730</th>\n",
+       "      <td>1584835200000000000</td>\n",
+       "      <td>True</td>\n",
+       "      <td>True</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13731</th>\n",
+       "      <td>1584835200000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13732</th>\n",
+       "      <td>1584835200000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                 Test_date  Cough_symptoms  Fever  Sore_throat  \\\n",
+       "13727  1584835200000000000            True  False            0   \n",
+       "13728  1584835200000000000            True  False            0   \n",
+       "13730  1584835200000000000            True   True            0   \n",
+       "13731  1584835200000000000           False  False            0   \n",
+       "13732  1584835200000000000           False  False            0   \n",
+       "\n",
+       "       Shortness_of_breath  Headache  Corona  Age_60_above  Sex  Known_contact  \n",
+       "13727                    0         0       0             0    1              0  \n",
+       "13728                    0         0       0             0    0              0  \n",
+       "13730                    0         0       2             1    0              2  \n",
+       "13731                    0         0       1             0    0              2  \n",
+       "13732                    0         0       1             0    0              2  "
+      ]
+     },
+     "execution_count": 43,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "id": "c070115a-9d45-42d9-b7a4-e934046ed18b",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Corona\n",
+       "0    242351\n",
+       "2     13560\n",
+       "1      3374\n",
+       "Name: count, dtype: int64"
+      ]
+     },
+     "execution_count": 44,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.Corona.value_counts()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "id": "ec22d2d2-a012-49e3-8b9c-aa358fcc425c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x=df.drop(\"Corona\",axis=1)\n",
+    "y=df.Corona"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "id": "800e3b9b-8265-43b4-a7e9-63d54e0aa784",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.model_selection import train_test_split"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "id": "a3d7a9fa-9d1c-4920-8d0d-73db3f8c5ea5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3,random_state=42)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 48,
+   "id": "ec58b79c-5f75-4aba-85af-b9b74f19712b",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Test_date</th>\n",
+       "      <th>Cough_symptoms</th>\n",
+       "      <th>Fever</th>\n",
+       "      <th>Sore_throat</th>\n",
+       "      <th>Shortness_of_breath</th>\n",
+       "      <th>Headache</th>\n",
+       "      <th>Age_60_above</th>\n",
+       "      <th>Sex</th>\n",
+       "      <th>Known_contact</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>63490</th>\n",
+       "      <td>1585612800000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>65767</th>\n",
+       "      <td>1585612800000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>263294</th>\n",
+       "      <td>1588032000000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>18952</th>\n",
+       "      <td>1584921600000000000</td>\n",
+       "      <td>True</td>\n",
+       "      <td>True</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>156548</th>\n",
+       "      <td>1586908800000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>278739</th>\n",
+       "      <td>1588204800000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>119797</th>\n",
+       "      <td>1586304000000000000</td>\n",
+       "      <td>True</td>\n",
+       "      <td>True</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>149491</th>\n",
+       "      <td>1586822400000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>164571</th>\n",
+       "      <td>1586995200000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>138806</th>\n",
+       "      <td>1586649600000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>181499 rows × 9 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                  Test_date  Cough_symptoms  Fever  Sore_throat  \\\n",
+       "63490   1585612800000000000           False  False            0   \n",
+       "65767   1585612800000000000           False  False            0   \n",
+       "263294  1588032000000000000           False  False            0   \n",
+       "18952   1584921600000000000            True   True            0   \n",
+       "156548  1586908800000000000           False  False            0   \n",
+       "...                     ...             ...    ...          ...   \n",
+       "278739  1588204800000000000           False  False            0   \n",
+       "119797  1586304000000000000            True   True            0   \n",
+       "149491  1586822400000000000           False  False            0   \n",
+       "164571  1586995200000000000           False  False            0   \n",
+       "138806  1586649600000000000           False  False            0   \n",
+       "\n",
+       "        Shortness_of_breath  Headache  Age_60_above  Sex  Known_contact  \n",
+       "63490                     0         0             0    0              2  \n",
+       "65767                     0         0             1    0              2  \n",
+       "263294                    0         0             0    0              2  \n",
+       "18952                     0         0             0    0              0  \n",
+       "156548                    0         0             0    1              2  \n",
+       "...                     ...       ...           ...  ...            ...  \n",
+       "278739                    0         0             0    1              2  \n",
+       "119797                    0         0             0    0              0  \n",
+       "149491                    0         0             0    0              2  \n",
+       "164571                    0         0             0    1              2  \n",
+       "138806                    0         0             0    0              2  \n",
+       "\n",
+       "[181499 rows x 9 columns]"
+      ]
+     },
+     "execution_count": 48,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x_train"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "id": "d6e8f543-7baf-4dca-bdae-0f83873b5e9c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.ensemble import RandomForestClassifier"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "id": "46892a96-8db8-4804-8fe8-66859bad1daa",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "Rf=RandomForestClassifier(n_estimators=100,random_state=42)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "id": "ae684322-3b3a-47c5-832d-4db8dbb68ee0",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: \"▸\";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: \"▾\";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: \"\";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: \"\";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: \"\";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id=\"sk-container-id-1\" class=\"sk-top-container\"><div class=\"sk-text-repr-fallback\"><pre>RandomForestClassifier(random_state=42)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class=\"sk-container\" hidden><div class=\"sk-item\"><div class=\"sk-estimator sk-toggleable\"><input class=\"sk-toggleable__control sk-hidden--visually\" id=\"sk-estimator-id-1\" type=\"checkbox\" checked><label for=\"sk-estimator-id-1\" class=\"sk-toggleable__label sk-toggleable__label-arrow\">RandomForestClassifier</label><div class=\"sk-toggleable__content\"><pre>RandomForestClassifier(random_state=42)</pre></div></div></div></div></div>"
+      ],
+      "text/plain": [
+       "RandomForestClassifier(random_state=42)"
+      ]
+     },
+     "execution_count": 51,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "Rf.fit(x_train,y_train)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "id": "3dca36cd-bfec-41e7-9ddf-4dab02d7b291",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pred=Rf.predict(x_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "id": "6dd2707d-7957-42de-ba0b-008362e7b85b",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Test_date</th>\n",
+       "      <th>Cough_symptoms</th>\n",
+       "      <th>Fever</th>\n",
+       "      <th>Sore_throat</th>\n",
+       "      <th>Shortness_of_breath</th>\n",
+       "      <th>Headache</th>\n",
+       "      <th>Age_60_above</th>\n",
+       "      <th>Sex</th>\n",
+       "      <th>Known_contact</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>254549</th>\n",
+       "      <td>1587945600000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>223732</th>\n",
+       "      <td>1587513600000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>211487</th>\n",
+       "      <td>1587427200000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>True</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>92966</th>\n",
+       "      <td>1585958400000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>49798</th>\n",
+       "      <td>1585440000000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>260369</th>\n",
+       "      <td>1587945600000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>113227</th>\n",
+       "      <td>1586217600000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>63603</th>\n",
+       "      <td>1585612800000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>219429</th>\n",
+       "      <td>1587513600000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>157403</th>\n",
+       "      <td>1586908800000000000</td>\n",
+       "      <td>False</td>\n",
+       "      <td>False</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>77786 rows × 9 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                  Test_date  Cough_symptoms  Fever  Sore_throat  \\\n",
+       "254549  1587945600000000000           False  False            0   \n",
+       "223732  1587513600000000000           False  False            0   \n",
+       "211487  1587427200000000000           False   True            0   \n",
+       "92966   1585958400000000000           False  False            0   \n",
+       "49798   1585440000000000000           False  False            0   \n",
+       "...                     ...             ...    ...          ...   \n",
+       "260369  1587945600000000000           False  False            0   \n",
+       "113227  1586217600000000000           False  False            0   \n",
+       "63603   1585612800000000000           False  False            0   \n",
+       "219429  1587513600000000000           False  False            0   \n",
+       "157403  1586908800000000000           False  False            0   \n",
+       "\n",
+       "        Shortness_of_breath  Headache  Age_60_above  Sex  Known_contact  \n",
+       "254549                    0         0             0    0              2  \n",
+       "223732                    0         0             0    1              2  \n",
+       "211487                    0         0             0    1              0  \n",
+       "92966                     0         0             1    1              2  \n",
+       "49798                     0         0             1    1              2  \n",
+       "...                     ...       ...           ...  ...            ...  \n",
+       "260369                    0         0             0    0              2  \n",
+       "113227                    0         0             0    1              2  \n",
+       "63603                     0         0             0    1              2  \n",
+       "219429                    0         0             0    1              2  \n",
+       "157403                    0         0             0    1              2  \n",
+       "\n",
+       "[77786 rows x 9 columns]"
+      ]
+     },
+     "execution_count": 53,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x_test"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "id": "46a8f73c-83e3-46f2-ba6a-1acc8f458e84",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "254549    0\n",
+       "223732    0\n",
+       "211487    0\n",
+       "92966     0\n",
+       "49798     0\n",
+       "         ..\n",
+       "260369    0\n",
+       "113227    0\n",
+       "63603     0\n",
+       "219429    0\n",
+       "157403    0\n",
+       "Name: Corona, Length: 77786, dtype: int32"
+      ]
+     },
+     "execution_count": 54,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "y_test"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "id": "ee471c26-1cf7-4902-a20e-94813a7b58a2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.metrics import accuracy_score,classification_report"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 56,
+   "id": "8a5d9cfe-ea84-4335-b445-d4a0d5b2c491",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "              precision    recall  f1-score   support\n",
+      "\n",
+      "           0       0.97      0.99      0.98     72682\n",
+      "           1       0.00      0.00      0.00      1001\n",
+      "           2       0.79      0.60      0.68      4103\n",
+      "\n",
+      "    accuracy                           0.96     77786\n",
+      "   macro avg       0.58      0.53      0.55     77786\n",
+      "weighted avg       0.94      0.96      0.95     77786\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(classification_report(y_test,pred))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 57,
+   "id": "a263840d-2b0e-4a85-af2a-104ea5deef8d",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0.9580258658370401\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(accuracy_score(y_test,pred))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 58,
+   "id": "5b683671-e6dd-4570-aea5-1118461e32e2",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.naive_bayes import GaussianNB,MultinomialNB"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 71,
+   "id": "8bf948ac-6e06-4340-a815-1fd0d1b0dae0",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "gnb=GaussianNB()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 72,
+   "id": "153e9565-fabc-4d41-abad-3d54503d23ec",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<style>#sk-container-id-3 {color: black;background-color: white;}#sk-container-id-3 pre{padding: 0;}#sk-container-id-3 div.sk-toggleable {background-color: white;}#sk-container-id-3 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-3 label.sk-toggleable__label-arrow:before {content: \"▸\";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-3 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-3 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-3 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-3 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-3 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-3 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: \"▾\";}#sk-container-id-3 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-3 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-3 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-3 div.sk-parallel-item::after {content: \"\";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-3 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 div.sk-serial::before {content: \"\";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-3 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-3 div.sk-item {position: relative;z-index: 1;}#sk-container-id-3 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-3 div.sk-item::before, #sk-container-id-3 div.sk-parallel-item::before {content: \"\";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-3 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-3 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-3 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-3 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-3 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-3 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-3 div.sk-label-container {text-align: center;}#sk-container-id-3 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-3 div.sk-text-repr-fallback {display: none;}</style><div id=\"sk-container-id-3\" class=\"sk-top-container\"><div class=\"sk-text-repr-fallback\"><pre>GaussianNB()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class=\"sk-container\" hidden><div class=\"sk-item\"><div class=\"sk-estimator sk-toggleable\"><input class=\"sk-toggleable__control sk-hidden--visually\" id=\"sk-estimator-id-3\" type=\"checkbox\" checked><label for=\"sk-estimator-id-3\" class=\"sk-toggleable__label sk-toggleable__label-arrow\">GaussianNB</label><div class=\"sk-toggleable__content\"><pre>GaussianNB()</pre></div></div></div></div></div>"
+      ],
+      "text/plain": [
+       "GaussianNB()"
+      ]
+     },
+     "execution_count": 72,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "gnb.fit(x_train,y_train)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 73,
+   "id": "5de24dca-f8b9-413c-a4e5-9549b2860037",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pred=gnb.predict(x_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 74,
+   "id": "078bcf93-39c2-4107-ac0d-973b31fae246",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([0, 0, 0, ..., 0, 0, 0])"
+      ]
+     },
+     "execution_count": 74,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pred"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 75,
+   "id": "bf3a8b25-bd55-48ad-9108-c9a89da8ecdd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.metrics import accuracy_score,classification_report"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 76,
+   "id": "0eb9ffcc-5b85-4d9b-87b2-ff9cf0515cc9",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "              precision    recall  f1-score   support\n",
+      "\n",
+      "           0       0.93      1.00      0.97     72682\n",
+      "           1       0.00      0.00      0.00      1001\n",
+      "           2       0.00      0.00      0.00      4103\n",
+      "\n",
+      "    accuracy                           0.93     77786\n",
+      "   macro avg       0.31      0.33      0.32     77786\n",
+      "weighted avg       0.87      0.93      0.90     77786\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(classification_report(y_test,pred))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 77,
+   "id": "5f3b8a9b-e16f-42f6-bd02-a7d0155bbe6f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "Mnb = MultinomialNB()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 78,
+   "id": "1c8c8f0b-5a59-4bdc-8f74-e368b5b78300",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<style>#sk-container-id-4 {color: black;background-color: white;}#sk-container-id-4 pre{padding: 0;}#sk-container-id-4 div.sk-toggleable {background-color: white;}#sk-container-id-4 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-4 label.sk-toggleable__label-arrow:before {content: \"▸\";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-4 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-4 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-4 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-4 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-4 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-4 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: \"▾\";}#sk-container-id-4 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-4 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-4 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-4 div.sk-parallel-item::after {content: \"\";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-4 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-4 div.sk-serial::before {content: \"\";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-4 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-4 div.sk-item {position: relative;z-index: 1;}#sk-container-id-4 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-4 div.sk-item::before, #sk-container-id-4 div.sk-parallel-item::before {content: \"\";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-4 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-4 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-4 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-4 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-4 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-4 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-4 div.sk-label-container {text-align: center;}#sk-container-id-4 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-4 div.sk-text-repr-fallback {display: none;}</style><div id=\"sk-container-id-4\" class=\"sk-top-container\"><div class=\"sk-text-repr-fallback\"><pre>MultinomialNB()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class=\"sk-container\" hidden><div class=\"sk-item\"><div class=\"sk-estimator sk-toggleable\"><input class=\"sk-toggleable__control sk-hidden--visually\" id=\"sk-estimator-id-4\" type=\"checkbox\" checked><label for=\"sk-estimator-id-4\" class=\"sk-toggleable__label sk-toggleable__label-arrow\">MultinomialNB</label><div class=\"sk-toggleable__content\"><pre>MultinomialNB()</pre></div></div></div></div></div>"
+      ],
+      "text/plain": [
+       "MultinomialNB()"
+      ]
+     },
+     "execution_count": 78,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "Mnb.fit(x_train, y_train)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 79,
+   "id": "f08eb19b-0097-4a4b-98ce-02945cf0f8ec",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pred=Mnb.predict(x_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 80,
+   "id": "ccccdf71-b6c3-4f98-a530-f6599bcb47e6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.metrics import accuracy_score,classification_report"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 81,
+   "id": "dd7e126a-1807-40d9-a5e9-f69799117863",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "              precision    recall  f1-score   support\n",
+      "\n",
+      "           0       0.93      1.00      0.97     72682\n",
+      "           1       0.00      0.00      0.00      1001\n",
+      "           2       0.00      0.00      0.00      4103\n",
+      "\n",
+      "    accuracy                           0.93     77786\n",
+      "   macro avg       0.31      0.33      0.32     77786\n",
+      "weighted avg       0.87      0.93      0.90     77786\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(classification_report(y_test,pred))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 82,
+   "id": "422b163a-a311-44cd-9f55-33244b8726fb",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pred1=Rf.predict(np.array([[0,1,0,2,1,0,2,0,1]]))[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 65,
+   "id": "9db6e506-8c43-4e3a-b9b8-825fa96e132b",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "2"
+      ]
+     },
+     "execution_count": 65,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pred1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 66,
+   "id": "08500aa8-079b-4a88-8d79-e0a1ef955838",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pred2=gnb.predict(np.array([[1,0,2,0,0,2,1,0,1]]))[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 83,
+   "id": "cecfcb24-50d5-43cc-87f9-9b50b867cf62",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0"
+      ]
+     },
+     "execution_count": 83,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pred2"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
